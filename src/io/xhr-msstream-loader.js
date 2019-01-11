@@ -95,7 +95,7 @@ class MSStreamLoader extends BaseLoader {
         this._internalOpen(dataSource, range, false);
     }
 
-    _internalOpen(dataSource, range, isSubrange) {
+    async _internalOpen(dataSource, range, isSubrange) {
         this._dataSource = dataSource;
 
         if (!isSubrange) {
@@ -104,6 +104,10 @@ class MSStreamLoader extends BaseLoader {
             this._currentRange = range;
         }
 
+        if (!dataSource.url && dataSource.getUrl) {
+          dataSource.url = await dataSource.getUrl()
+        }
+        
         let sourceURL = dataSource.url;
         if (this._config.reuseRedirectedURL) {
             if (this._currentRedirectedURL != undefined) {

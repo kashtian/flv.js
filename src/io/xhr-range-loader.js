@@ -122,9 +122,13 @@ class RangeLoader extends BaseLoader {
         this._internalOpen(this._dataSource, this._currentRequestRange);
     }
 
-    _internalOpen(dataSource, range) {
+    async _internalOpen(dataSource, range) {
         this._lastTimeLoaded = 0;
 
+        if (!dataSource.url && dataSource.getUrl) {
+          dataSource.url = await dataSource.getUrl()
+        }
+        
         let sourceURL = dataSource.url;
         if (this._config.reuseRedirectedURL) {
             if (this._currentRedirectedURL != undefined) {

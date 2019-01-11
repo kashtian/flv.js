@@ -62,9 +62,13 @@ class FetchStreamLoader extends BaseLoader {
         super.destroy();
     }
 
-    open(dataSource, range) {
+    async open(dataSource, range) {
         this._dataSource = dataSource;
         this._range = range;
+
+        if (!dataSource.url && dataSource.getUrl) {
+          dataSource.url = await dataSource.getUrl()
+        }
 
         let sourceURL = dataSource.url;
         if (this._config.reuseRedirectedURL && dataSource.redirectedURL != undefined) {
